@@ -111,10 +111,11 @@ public class RoomController {
     @PreAuthorize("hasRole('ROLE_ADMIN')")
     public ResponseEntity<RoomResponse> updateRoom(@PathVariable Long roomId,
 //                                 @RequestParam(required = false)  => tham số không bắt buộc, có thể bằng null
-                                                   @RequestParam(required = false) String roomType,
-                                                   @RequestParam(required = false) BigDecimal roomPrice,
-                                                   @RequestParam(required = false) MultipartFile photo) throws IOException, SQLException {
+                                                   @RequestParam(name = "roomType", required = false) String roomType,
+                                                   @RequestParam(name = "roomPrice", required = false) BigDecimal roomPrice,
+                                                   @RequestParam(name = "photo", required = false) MultipartFile photo) throws IOException, SQLException {
         byte[] photoBytes = photo != null && !photo.isEmpty() ? photo.getBytes() : roomService.getRoomPhotoByRoomId(roomId);
+        // blob là 1 interface => dùng class serialBlob để handle các dữ liệu liên quan đến blob
         Blob photoBlob = photoBytes != null && photoBytes.length > 0 ? new SerialBlob(photoBytes) : null;
         Room theRoom = roomService.updateRoom(roomId, roomType, roomPrice, photoBytes);
         theRoom.setPhoto(photoBlob);
@@ -138,7 +139,8 @@ public class RoomController {
         List<Room> availableRooms = roomService.getAvailableRooms(checkInDate, checkOutDate, roomType);
         List<RoomResponse> roomResponses = new ArrayList<>();
         for (Room room : availableRooms) {
-            byte[] photoBytes = roomService.getRoomPhotoByRoomId(room.getId());
+            //byte[] photoBytes = roomService.getRoomPhotoByRoomId(room.getId());
+            byte[] photoBytes = room.getPhoto().getBytes(1,(int)room.getPhoto().length());
             if (photoBytes != null && photoBytes.length > 0) {
                 String photoBase64 = Base64.encodeBase64String(photoBytes);
                 RoomResponse roomResponse = getRoomResponse(room);
@@ -146,7 +148,6 @@ public class RoomController {
                 roomResponses.add(roomResponse);
             }
         }
-        System.out.println(checkInDate + " " + checkOutDate + " " + roomType);
         if (roomResponses.isEmpty()) {
             return ResponseEntity.noContent().build();
         } else {

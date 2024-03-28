@@ -9,7 +9,7 @@ import java.time.LocalDate;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class BookingResponse { // đây là class dto ứng với bookedroom entity
+public class BookingsResponse {
     private Long bookingId;
     private LocalDate checkInDate;
     private LocalDate checkOutDate;
@@ -20,7 +20,5 @@ public class BookingResponse { // đây là class dto ứng với bookedroom ent
     private int totalNumOfGuest;
     private String bookingConfirmationCode;
     private RoomResponse roomResponse;
-
-    //private Long userId;
-
+    private UserResponse userResponse;
 }

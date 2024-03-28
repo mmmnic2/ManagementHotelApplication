@@ -14,6 +14,7 @@ import org.springframework.stereotype.Component;
 import java.security.Key;
 import java.util.Date;
 import java.util.List;
+
 @Component
 public class JwtUtils {
     private static final Logger logger = LoggerFactory.getLogger(JwtUtils.class);
@@ -29,6 +30,7 @@ public class JwtUtils {
                 .map(GrantedAuthority::getAuthority).toList();
         return Jwts.builder().setSubject(userPrincipal.getUsername())
                 .claim("roles", roles)
+                .claim("id", userPrincipal.getId())
                 .setIssuedAt(new Date())
                 .setExpiration(new Date(new Date().getTime() + jwtExpirationTime))
                 .signWith(key(), SignatureAlgorithm.HS256).compact();
@@ -55,9 +57,9 @@ public class JwtUtils {
             logger.error("Invalid jwt token: {}", e.getMessage());
         } catch (ExpiredJwtException e) {
             logger.error("Expired token: {}", e.getMessage());
-        }catch(UnsupportedJwtException e){
+        } catch (UnsupportedJwtException e) {
             logger.error("This token is not supported : {}", e.getMessage());
-        }catch (IllegalArgumentException e){
+        } catch (IllegalArgumentException e) {
             logger.error("No claims found: {}", e.getMessage());
         }
         return false;

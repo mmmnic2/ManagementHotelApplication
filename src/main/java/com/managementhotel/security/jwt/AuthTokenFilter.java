@@ -35,10 +35,13 @@ public class AuthTokenFilter extends OncePerRequestFilter {
             String jwt = parseJwt(request);
             if (jwt != null && jwtUtils.validateToken(jwt)) {
                 String email = jwtUtils.getUserNameFromToken(jwt);
+                // get userDetails by username
                 UserDetails userDetails = hotelUserDetailsService.loadUserByUsername(email);
+                // set authentication lưu username password and roles
                 UsernamePasswordAuthenticationToken authenticationToken =
                         new UsernamePasswordAuthenticationToken(userDetails, null, userDetails.getAuthorities());
                 authenticationToken.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
+                // add authenticationToken vào authentication trong context holder của spring security
                 SecurityContextHolder.getContext().setAuthentication(authenticationToken);
             }
         } catch (Exception e) {

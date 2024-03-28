@@ -3,7 +3,7 @@ import {
   cancelBooking,
   getBookingByConfirmationCode,
 } from "../utils/ApiFunction";
-const FindBooking = () => {
+const FindMyBooking = () => {
   const [confirmationCode, setConfirmationCode] = useState("");
   const [error, setError] = useState("");
   const [isLoading, setIsLoading] = useState(false);
@@ -129,4 +129,4 @@ const FindBooking = () => {
   );
 };
 
-export default FindBooking;
+export default FindMyBooking;

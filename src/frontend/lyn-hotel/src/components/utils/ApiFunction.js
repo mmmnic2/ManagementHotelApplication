@@ -11,6 +11,15 @@ export function getHeader() {
     "Content-Type": "application/json",
   };
 }
+
+export function getHeaderWithFormDaTa() {
+  const token = localStorage.getItem("token");
+  return {
+    Authorization: `Bearer ${token}`,
+    "Content-Type": "multipart/form-data",
+  };
+}
+
 /*Function này để thêm 1 room mới */
 export async function addRoom(photo, roomType, roomPrice) {
   const formData = new FormData();
@@ -18,7 +27,7 @@ export async function addRoom(photo, roomType, roomPrice) {
   formData.append("roomType", roomType);
   formData.append("roomPrice", roomPrice);
   const response = await api.post("/rooms/new-room", formData, {
-    headers: getHeader(),
+    headers: getHeaderWithFormDaTa(),
   });
   if (response.status == 200 || response.status == 201) {
     return true;
@@ -28,8 +37,8 @@ export async function addRoom(photo, roomType, roomPrice) {
 /* Function này để lấy tất cả các type room */
 export async function getRoomTypes() {
   try {
-    const response = api.get("/rooms/room-types");
-    return (await response).data;
+    const response = await api.get("/rooms/room-types");
+    return response.data;
   } catch (e) {
     throw new Error("Error fetching room types");
   }
@@ -37,8 +46,8 @@ export async function getRoomTypes() {
 /* this function gets all rooms from database */
 export async function getAllRooms() {
   try {
-    const response = api.get("/rooms/all-rooms");
-    return (await response).data;
+    const response = await api.get("/rooms/all-rooms");
+    return response.data;
   } catch (e) {
     throw new Error("Error fetching all rooms");
   }
@@ -58,7 +67,10 @@ export async function updateRoom(roomId, roomData) {
   formData.append("roomType", roomData.roomType);
   formData.append("roomPrice", roomData.roomPrice);
   formData.append("photo", roomData.photo);
-  const respone = await api.put(`/rooms/update/${roomId}`, formData);
+  console.log(formData);
+  const respone = await api.put(`/rooms/update/${roomId}`, formData, {
+    headers: getHeaderWithFormDaTa(),
+  });
   return respone;
 }
 
@@ -89,10 +101,30 @@ export async function bookRoom(roomId, booking) {
     }
   }
 }
+/*Function này để sửa lại lệnh saveBook lưu luôn cả id của người dùng */
+export async function bookRoom(roomId, booking, userId) {
+  try {
+    const response = await api.post(
+      `/bookings/room/${roomId}/user/${userId}/booking`,
+      { headers: getHeader() }
+    );
+    return response.data;
+  } catch (error) {
+    if (error.response && error.response.data) {
+      throw new Error(error.response.data);
+    } else {
+      throw new Error(`Error booking room: ${error.message}`);
+    }
+  }
+}
+//////// Endddd
+
 /*This function get all bookings from the database  */
 export async function getAllBookings() {
   try {
-    const result = await api.get("/bookings/all-bookings");
+    const result = await api.get("/bookings/all-bookings", {
+      headers: getHeader(),
+    });
     return result.data;
   } catch (e) {
     throw new Error(`Error fetching bookings: ${e.message}`);
@@ -116,7 +148,9 @@ export async function getBookingByConfirmationCode(confirmationCode) {
 /*This function delete booking by bookingId */
 export async function cancelBooking(bookingId) {
   try {
-    const result = await api.delete(`bookings/${bookingId}/delete`);
+    const result = await api.delete(`bookings/${bookingId}/delete`, {
+      headers: getHeader(),
+    });
     return result.data;
   } catch (error) {
     throw new Error(`Error cancling booking: ${error.message}`);
@@ -141,8 +175,9 @@ export async function registerUser(registration) {
     const response = await api.post("/auth/register-user", registration);
     return response.data;
   } catch (error) {
-    if (error.respone && error.respone.data) {
-      throw new Error(error.respone.data);
+    console.log(error);
+    if (error.response && error.response.data) {
+      throw new Error(error.response.data);
     } else {
       throw new Error(`User registration error: ${error.message}`);
     }
@@ -183,7 +218,7 @@ export async function deleteUser(userId) {
     return error.message;
   }
 }
-export async function getUser(userId, token) {
+export async function getUser(userId) {
   try {
     const response = await api.get(`/users/${userId}`, {
       headers: getHeader(),

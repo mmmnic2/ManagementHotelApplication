@@ -15,12 +15,14 @@ export const AuthProvider = ({ children }) => {
     localStorage.setItem("userId", decodedToken.sub);
     localStorage.setItem("userRole", decodedToken.roles);
     localStorage.setItem("token", token);
+    localStorage.setItem("id", decodedToken.userId);
     setUser(decodedToken);
   };
   const handleLogout = () => {
     localStorage.removeItem("userId");
     localStorage.removeItem("userRole");
     localStorage.removeItem("token");
+    localStorage.removeItem("id");
     setUser(null);
   };
   return (

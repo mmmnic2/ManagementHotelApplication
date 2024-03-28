@@ -6,8 +6,8 @@ const Logout = () => {
   const navigate = useNavigate();
   const handleLogout = () => {
     auth.handleLogout();
-    //window.location.reload();
     navigate("/", { state: { message: "You have been logged out!!!" } });
+    //window.location.reload();
   };
   const isLoggedIn = localStorage.getItem("userId") !== null;
   return isLoggedIn ? (

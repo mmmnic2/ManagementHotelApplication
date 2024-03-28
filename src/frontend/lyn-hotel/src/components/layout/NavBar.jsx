@@ -1,21 +1,19 @@
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import { Link, NavLink } from "react-router-dom";
 import Logout from "../auth/Logout";
-import { useAuth } from "../auth/AuthProvider";
+//import { useAuth } from "../auth/AuthProvider";
 
 const NavBar = () => {
   const [showAccount, setShowAccount] = useState(false);
   const handleAccountClick = () => {
     setShowAccount(!showAccount);
   };
-  const { user } = useAuth();
-  useEffect(() => {
-    console.log(user);
-  }, []);
+  //const location = useLocation();
+  //const { user } = useAuth();
 
-  const isLoggedIn = localStorage.getItem("userId") !== null ? true : false;
+  const isLoggedIn = localStorage.getItem("userId");
   const userRole = localStorage.getItem("userRole");
-
+  const userId = localStorage.getItem("id");
   return (
     <nav className="navbar navbar-expand-lg bg-body-tertiary px-5 shadow  sticky-top">
       <div className="container-fluid">
@@ -53,11 +51,14 @@ const NavBar = () => {
             )}
           </ul>
           <ul className="d-flex navbar-nav">
-            <li className="nav-item">
-              <NavLink className="nav-link" to={"/find-booking"}>
-                Find my booking
-              </NavLink>
-            </li>
+            {isLoggedIn && (
+              <li className="nav-item">
+                {/* <NavLink className="nav-link" to={`/find-booking`}> */}
+                <NavLink className="nav-link" to={`/find-booking/${userId}`}>
+                  Find my booking
+                </NavLink>
+              </li>
+            )}
             <li className="nav-item dropdown">
               <a
                 className={`nav-link dropdown-toggle ${

@@ -3,8 +3,10 @@ package com.managementhotel.response;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashSet;
+import java.util.List;
 
 @Data
 public class UserResponse {
@@ -13,7 +15,7 @@ public class UserResponse {
     private String firstName;
     private String lastName;
     private Collection<RoleResponse> roles = new HashSet<>();
-
+    private List<BookingsResponse> bookingsResponseList = new ArrayList<>();
     public UserResponse(Long id, String email, String firstName, String lastName) {
         this.id = id;
         this.email = email;

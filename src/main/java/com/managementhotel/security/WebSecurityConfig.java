@@ -52,7 +52,9 @@ public class WebSecurityConfig {
                         .requestMatchers("/auth/**", "/rooms/**").permitAll()
                         .requestMatchers("/roles/**").hasRole("ADMIN")
                         .anyRequest().authenticated());
+        // nhà cung cấp xác thực bằng cách sử dụng method authenticationProvider()
         http.authenticationProvider(authenticationProvider());
+        // Thêm filter xác thực dựa trên JWT trước UsernamePasswordAuthenticationFilter
         http.addFilterBefore(authenticationTokenFilter(), UsernamePasswordAuthenticationFilter.class);
         return http.build();
     }

@@ -26,7 +26,7 @@ public class Room {
     private boolean isBooked = false;
     @Lob
     private Blob photo;
-
+    // fech lazy nghĩa là khi gọi tới bra
     @OneToMany(mappedBy = "room", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     private List<BookedRoom> bookings = new ArrayList<>();
 
@@ -35,8 +35,11 @@ public class Room {
         if(this.bookings == null){
             this.bookings = new ArrayList<>();
         }
+        // add booking vào listBooking của room
         this.bookings.add(booking);
+        // add room vào booking
         booking.setRoom(this);
+        // phòng đã được đặt => isBooked = true
         this.isBooked = true;
         //random ra một chuỗi code để đưa vào code booking
         String bookingCode = RandomStringUtils.randomNumeric(10);

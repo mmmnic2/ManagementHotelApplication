@@ -43,6 +43,7 @@ const EditRoom = () => {
     e.preventDefault();
     try {
       const response = await updateRoom(roomId, room);
+      console.log(response);
       if (response.status === 200) {
         setSuccessMessage("Room updated successfully");
         const updatedRoomData = await getRoomById(roomId);
@@ -59,7 +60,8 @@ const EditRoom = () => {
     setTimeout(() => {
       setImagePreview("");
       setErrorMessage("");
-    }, 5000);
+      setSuccessMessage("");
+    }, 4000);
   };
   return (
     <div className="container mt-5 mb-5">
@@ -95,7 +97,7 @@ const EditRoom = () => {
                 Room Price
               </label>
               <input
-                type="text"
+                type="number"
                 className="form-control"
                 id="roomPrice"
                 name="roomPrice"

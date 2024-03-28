@@ -17,7 +17,6 @@ const Bookings = () => {
     getAllBookings()
       .then((data) => {
         setBookingInfo(data);
-        console.log(data);
         setIsLoading(false);
       })
       .catch((error) => {

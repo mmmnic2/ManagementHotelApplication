@@ -4,6 +4,7 @@ import com.managementhotel.entity.Room;
 import com.managementhotel.exception.ResourceNotFoundException;
 import com.managementhotel.repository.RoomRepository;
 import com.managementhotel.service.IRoomService;
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Service;
@@ -19,9 +20,9 @@ import java.util.List;
 import java.util.Optional;
 
 @Service
+@RequiredArgsConstructor
 public class RoomService implements IRoomService {
-    @Autowired
-    private RoomRepository roomRepository;
+    private final RoomRepository roomRepository;
     @Override
     public Room addNewRoom(MultipartFile file, String roomType, BigDecimal roomPrice) throws SQLException, IOException {
         Room room = new Room();
@@ -32,8 +33,7 @@ public class RoomService implements IRoomService {
             Blob photoBlob = new SerialBlob(photoBytes);
             room.setPhoto(photoBlob);
         }
-        roomRepository.save(room);
-        return room;
+        return roomRepository.save(room);
     }
 
     @Override

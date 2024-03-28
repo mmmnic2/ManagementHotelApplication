@@ -2,6 +2,7 @@ package com.managementhotel.service.impl;
 
 import com.managementhotel.entity.Role;
 import com.managementhotel.entity.User;
+import com.managementhotel.exception.ResourceNotFoundException;
 import com.managementhotel.exception.UserAlreadyExistException;
 import com.managementhotel.repository.RoleRepository;
 import com.managementhotel.repository.UserRepository;
@@ -34,6 +35,7 @@ public class UserService implements IUserService {
         //find role with name "ROLE_USER" rồi add vào list role của user
         Role userRole = roleRepository.findByName("ROLE_USER").get();
         user.setRoles(Collections.singletonList(userRole));
+
         // xong xuôi thì lưu lại vào db
         return userRepository.save(user);
     }
@@ -56,5 +58,10 @@ public class UserService implements IUserService {
     @Override
     public User getUser(String email) {
         return userRepository.findByEmail(email).orElseThrow(() -> new UsernameNotFoundException("User Not Found!!"));
+    }
+
+    @Override
+    public User getUserByUserId(Long userId) {
+        return userRepository.findById(userId).orElseThrow(() -> new ResourceNotFoundException("user id not found!!"));
     }
 }

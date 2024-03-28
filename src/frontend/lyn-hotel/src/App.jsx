@@ -49,7 +49,15 @@ function App() {
             <Route path="/booking-success" element={<BookingSuccess />} />
 
             <Route path="/existing-bookings" element={<Bookings />} />
-            <Route path="/find-booking" element={<FindBooking />} />
+            {/* <Route path="/find-booking" element={<FindBooking />} /> */}
+            <Route
+              path="/find-booking/:userId"
+              element={
+                <RequireAuth>
+                  <FindBooking />
+                </RequireAuth>
+              }
+            />
             <Route path="/login" element={<Login />} />
             <Route path="/register" element={<Registration />} />
             <Route path="/profile" element={<Profile />} />

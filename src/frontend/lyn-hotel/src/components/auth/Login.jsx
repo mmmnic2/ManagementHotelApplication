@@ -25,6 +25,7 @@ const Login = () => {
       const token = success.token;
       auth.handleLogin(token);
       navigate(redirectUrl, { replace: true });
+      //window.location.reload();
     } else {
       setErrorMessage("Invalid username or password. Please try again.");
     }

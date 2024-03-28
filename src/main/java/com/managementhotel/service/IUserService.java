@@ -9,4 +9,6 @@ public interface IUserService {
     List<User> getUsers();
     void deleteUser(String email);
     User getUser(String email);
+    //mới thêm vào
+    User getUserByUserId(Long userId);
 }
