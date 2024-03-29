@@ -1,6 +1,6 @@
 import { Navigate, useLocation } from "react-router-dom";
 import PropTypes from "prop-types";
-//component requireauth để kiểm tra xem các đường dẫn url mà user muốn request vào 
+//component requireauth để kiểm tra xem các đường dẫn url mà user muốn request vào
 // có được xác thực hay không
 const RequireAuth = ({ children }) => {
   const user = localStorage.getItem("userId");

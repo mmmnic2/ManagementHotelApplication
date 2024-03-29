@@ -1,14 +1,11 @@
 import { useLocation } from "react-router-dom";
 import Header from "../common/Header";
-import { useEffect } from "react";
+
 const BookingSuccess = () => {
   // khi book phòng success sẽ direct tới component này
   const location = useLocation();
   const message = location.state?.message;
   const error = location.state?.error;
-  useEffect(() => {
-    console.log(location);
-  }, [location]);
 
   return (
     <div className="container">

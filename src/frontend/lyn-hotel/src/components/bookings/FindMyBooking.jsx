@@ -1,16 +1,22 @@
-import { useState } from "react";
+import { useState, useEffect, useContext } from "react";
 import {
   cancelBooking,
   getBookingByConfirmationCode,
+  getBookingsByUserId,
 } from "../utils/ApiFunction";
+import { LoginContext } from "../../App";
+import { Row } from "react-bootstrap";
+import BookingCard from "./BookingCard";
 const FindMyBooking = () => {
   const [confirmationCode, setConfirmationCode] = useState("");
   const [error, setError] = useState("");
   const [isLoading, setIsLoading] = useState(false);
   const [isDeleted, setIsDeleted] = useState(false);
+  const [bookings, setBookings] = useState([]);
+  const [errorMessage, setErrorMessage] = useState("");
   const [bookingInfo, setBookingInfo] = useState({
     bookingId: "",
-    roomResponse: { id: "", roomType: "" },
+    roomResponse: { id: "", roomType: "", photo: "" },
     bookingConfirmationCode: "",
     checkInDate: "",
     checkOutDate: "",
@@ -22,7 +28,7 @@ const FindMyBooking = () => {
   });
   const clearBookingInfo = {
     bookingId: "",
-    roomResponse: { id: "", roomType: "" },
+    roomResponse: { id: "", roomType: "", photo: "" },
     bookingConfirmationCode: "",
     checkInDate: "",
     checkOutDate: "",
@@ -32,6 +38,17 @@ const FindMyBooking = () => {
     numOfChildren: "",
     totalNumOfGuest: "",
   };
+  const { id } = useContext(LoginContext);
+  useEffect(() => {
+    getBookingsByUserId(id)
+      .then((data) => {
+        setBookings(data);
+      })
+      .catch((error) => {
+        setErrorMessage(error.message);
+      });
+  }, [id]);
+
   const handleInputChange = (e) => {
     setConfirmationCode(e.target.value);
   };
@@ -69,6 +86,12 @@ const FindMyBooking = () => {
   };
   return (
     <>
+      {errorMessage && <p className="text-danger">{errorMessage}</p>}
+      {isDeleted && (
+        <div className="alert alert-success mt-3" role="alert">
+          Booking has been cancelled successfully
+        </div>
+      )}
       <div className="container mt-5 d-flex flex-column justify-content-center align-items-center">
         <h2>Find My Booking</h2>
         <form onSubmit={handleFormSubmit} className="col-md-6">
@@ -92,36 +115,21 @@ const FindMyBooking = () => {
         ) : error ? (
           <div className="text-danger">Error: {error}</div>
         ) : bookingInfo.bookingConfirmationCode ? (
-          <div className="col-md-6 mt-5 mb-4">
-            <h3>Booking Confirmation</h3>
-            <p>
-              Booking Confirmation Code : {bookingInfo.bookingConfirmationCode}
-            </p>
-            <p>Booking ID : {bookingInfo.bookingId}</p>
-            <p>Room Number : {bookingInfo.roomResponse.id}</p>
-            <p>Room Type : {bookingInfo.roomResponse.roomType}</p>
-            <p>Check-In Date : {bookingInfo.checkInDate}</p>
-            <p>Check-Out Date : {bookingInfo.checkOutDate}</p>
-            <p>Full Name : {bookingInfo.guestFullName}</p>
-            <p>Email : {bookingInfo.guestEmail}</p>
-            <p>Adults : {bookingInfo.numOfAdults}</p>
-            <p>Children : {bookingInfo.numOfChildren}</p>
-            <p>Total Guest : {bookingInfo.totalNumOfGuest}</p>
-            {!isDeleted && (
-              <button
-                className="btn btn-danger"
-                onClick={() => handleBookingCancellation(bookingInfo.bookingId)}
-              >
-                Cancel Booking
-              </button>
-            )}
-          </div>
+          <BookingCard
+            booking={bookingInfo}
+            handleBookingCancellation={handleBookingCancellation}
+          />
         ) : (
-          <div>Find Booking...</div>
-        )}
-        {isDeleted && (
-          <div className="alert alert-success mt-3" role="alert">
-            Booking has been cancelled successfully
+          <div>
+            <Row className="d-flex justity-content-center">
+              {bookings.map((booking) => (
+                <BookingCard
+                  key={booking.bookingId}
+                  booking={booking}
+                  handleBookingCancellation={handleBookingCancellation}
+                />
+              ))}
+            </Row>
           </div>
         )}
       </div>

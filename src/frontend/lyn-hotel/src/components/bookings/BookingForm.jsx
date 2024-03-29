@@ -1,10 +1,11 @@
 import { useState } from "react";
-import { bookRoom, getRoomById } from "../utils/ApiFunction";
-import { useEffect } from "react";
+import { booksRoom, getRoomById } from "../utils/ApiFunction";
+import { useEffect, useContext } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import { Form, FormControl } from "react-bootstrap";
 import moment from "moment";
 import BookingSummary from "./BookingSummary";
+import { LoginContext } from "../../App";
 // form nhập thông tin book room
 const BookingForm = () => {
   const { roomId } = useParams();
@@ -13,7 +14,7 @@ const BookingForm = () => {
   const [isSubmitted, setIsSubmitted] = useState(false);
   const [errorMessage, setErrorMessage] = useState("");
   const [roomPrice, setRoomPrice] = useState(0);
-
+  const { id } = useContext(LoginContext);
   const currentUser = localStorage.getItem("userId");
 
   const [booking, setBooking] = useState({
@@ -85,7 +86,9 @@ const BookingForm = () => {
 
   const handleBooking = async () => {
     try {
-      const confirmationCode = await bookRoom(roomId, booking);
+      //const confirmationCode = await bookRoom(roomId, booking);
+      // update here
+      const confirmationCode = await booksRoom(roomId, booking, id);
       setIsSubmitted(true);
       navigate("/booking-success", { state: { message: confirmationCode } });
     } catch (e) {

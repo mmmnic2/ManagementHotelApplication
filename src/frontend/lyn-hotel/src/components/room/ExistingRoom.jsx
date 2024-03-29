@@ -23,7 +23,7 @@ const ExistingRoom = () => {
     setIsLoading(true);
     try {
       const result = await getAllRooms();
-      console.log(result);
+
       setRooms(result);
       setIsLoading(false);
     } catch (error) {

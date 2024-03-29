@@ -14,12 +14,14 @@ import com.managementhotel.service.impl.RoomService;
 import com.managementhotel.service.impl.UserService;
 import lombok.AllArgsConstructor;
 import lombok.RequiredArgsConstructor;
+import org.apache.tomcat.util.codec.binary.Base64;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -46,10 +48,12 @@ public class BookingController {
     public ResponseEntity<?> getBookingByConfirmationCode(@PathVariable String confirmationCode) {
         try {
             BookedRoom booking = bookingService.findByBookingConfirmationCode(confirmationCode);
-            BookingResponse bookingResponse = getBookingResponse(booking);
+            BookingResponse bookingResponse = getBookingResponseWithPhoto(booking);
             return ResponseEntity.ok(bookingResponse);
         } catch (ResourceNotFoundException e) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
+        } catch (SQLException e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
         }
     }
 
@@ -104,13 +108,30 @@ public class BookingController {
             return ResponseEntity.badRequest().body(e.getMessage());
         }
     }
-
+    private BookingResponse getBookingResponseWithPhoto(BookedRoom booking) throws SQLException {
+        Room theRoom = roomService.getRoomById(booking.getRoom().getId()).get();
+        RoomResponse room = new RoomResponse(theRoom.getId(), theRoom.getRoomType(), theRoom.getRoomPrice());
+        byte[] photoByte = theRoom.getPhoto().getBytes(1, (int)theRoom.getPhoto().length());
+        String photo = Base64.encodeBase64String(photoByte);
+        room.setPhoto(photo);
+        return new BookingResponse(booking.getBookingId(), booking.getCheckInDate(),
+                booking.getCheckOutDate(), booking.getGuestFullName(), booking.getGuestEmail(),
+                booking.getNumOfChildren(), booking.getNumOfAdults(), booking.getTotalNumOfGuest(),
+                booking.getBookingConfirmationCode(), room);
+    }
     @GetMapping("/find-bookings/user/{userId}")
-    public ResponseEntity<?> findBookingByUserId(@PathVariable Long userId){
+
+    public ResponseEntity<?> findBookingByUserId(@PathVariable Long userId) {
         try{
             List<BookedRoom> bookedRoomList = bookingService.findBookingsByUserId(userId);
             List<BookingResponse> bookings = new ArrayList<>();
-            bookedRoomList.forEach(booking -> bookings.add(getBookingResponse(booking)));
+            bookedRoomList.forEach(booking -> {
+                try {
+                    bookings.add(getBookingResponseWithPhoto(booking));
+                } catch (SQLException e) {
+                    throw new RuntimeException(e);
+                }
+            });
             return ResponseEntity.ok(bookings);
         }catch (ResourceNotFoundException e){
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());

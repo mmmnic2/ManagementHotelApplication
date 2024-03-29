@@ -102,10 +102,11 @@ export async function bookRoom(roomId, booking) {
   }
 }
 /*Function này để sửa lại lệnh saveBook lưu luôn cả id của người dùng */
-export async function bookRoom(roomId, booking, userId) {
+export async function booksRoom(roomId, booking, userId) {
   try {
     const response = await api.post(
       `/bookings/room/${roomId}/user/${userId}/booking`,
+      booking,
       { headers: getHeader() }
     );
     return response.data;
@@ -231,11 +232,15 @@ export async function getUser(userId) {
 
 export async function getBookingsByUserId(userId) {
   try {
-    const result = await api.get(`/bookings/user/${userId}/bookings`, {
+    const result = await api.get(`/bookings/find-bookings/user/${userId}`, {
       headers: getHeader(),
     });
     return result.data;
   } catch (error) {
-    throw new Error(error.message);
+    if (error.response && error.response.data) {
+      throw new Error(error.response.data);
+    } else {
+      throw new Error(`Error find booking: ${error.message}`);
+    }
   }
 }

@@ -1,6 +1,7 @@
-import { useState } from "react";
+import { useState, useContext } from "react";
 import { Link, NavLink } from "react-router-dom";
 import Logout from "../auth/Logout";
+import { LoginContext } from "../../App";
 //import { useAuth } from "../auth/AuthProvider";
 
 const NavBar = () => {
@@ -8,12 +9,10 @@ const NavBar = () => {
   const handleAccountClick = () => {
     setShowAccount(!showAccount);
   };
-  //const location = useLocation();
-  //const { user } = useAuth();
-
-  const isLoggedIn = localStorage.getItem("userId");
+  const { isLoggedIn } = useContext(LoginContext);
+  //const isLoggedIn = localStorage.getItem("userId");
   const userRole = localStorage.getItem("userRole");
-  const userId = localStorage.getItem("id");
+
   return (
     <nav className="navbar navbar-expand-lg bg-body-tertiary px-5 shadow  sticky-top">
       <div className="container-fluid">
@@ -54,7 +53,7 @@ const NavBar = () => {
             {isLoggedIn && (
               <li className="nav-item">
                 {/* <NavLink className="nav-link" to={`/find-booking`}> */}
-                <NavLink className="nav-link" to={`/find-booking/${userId}`}>
+                <NavLink className="nav-link" to={`/find-booking`}>
                   Find my booking
                 </NavLink>
               </li>
