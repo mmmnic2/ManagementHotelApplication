@@ -1,9 +1,5 @@
 import { useState, useEffect, useContext } from "react";
-import {
-  cancelBooking,
-  getBookingByConfirmationCode,
-  getBookingsByUserId,
-} from "../utils/ApiFunction";
+import { cancelBooking, getBookingsByUserId } from "../utils/ApiFunction";
 import { LoginContext } from "../../App";
 import { Row } from "react-bootstrap";
 import BookingCard from "./BookingCard";
@@ -13,7 +9,7 @@ const FindMyBooking = () => {
   const [isLoading, setIsLoading] = useState(false);
   const [isDeleted, setIsDeleted] = useState(false);
   const [bookings, setBookings] = useState([]);
-  const [errorMessage, setErrorMessage] = useState("");
+
   const [bookingInfo, setBookingInfo] = useState({
     bookingId: "",
     roomResponse: { id: "", roomType: "", photo: "" },
@@ -45,30 +41,50 @@ const FindMyBooking = () => {
         setBookings(data);
       })
       .catch((error) => {
-        setErrorMessage(error.message);
+        setError(error.message);
       });
   }, [id]);
 
   const handleInputChange = (e) => {
     setConfirmationCode(e.target.value);
   };
-  const handleFormSubmit = async (e) => {
+  // const handleFormSubmit = async (e) => {
+  //   e.preventDefault();
+  //   setIsLoading(true);
+  //   try {
+  //     const data = await getBookingByConfirmationCode(confirmationCode);
+  //     setBookingInfo(data);
+  //   } catch (error) {
+  //     setBookingInfo(clearBookingInfo);
+  //     if (error.response && error.response.status === 404) {
+  //       setError(error.response.data);
+  //     } else {
+  //       setError(error.message);
+  //     }
+  //   }
+  //   setTimeout(() => {
+  //     setIsLoading(false);
+  //   }, 2000);
+  // };
+  const handleFormSubmit = (e) => {
     e.preventDefault();
+    setError("");
     setIsLoading(true);
-    try {
-      const data = await getBookingByConfirmationCode(confirmationCode);
-      setBookingInfo(data);
-    } catch (error) {
-      setBookingInfo(clearBookingInfo);
-      if (error.response && error.response.status === 404) {
-        setError(error.response.data);
+    if (confirmationCode !== "") {
+      const searchBooking = bookings.find(
+        (booking) => booking.bookingConfirmationCode === confirmationCode
+      );
+
+      if (searchBooking) {
+        console.log(searchBooking);
+        setBookingInfo(searchBooking);
       } else {
-        setError(error.message);
+        setError(`No Booking Found With Booking Code:" ${confirmationCode}`);
       }
     }
     setTimeout(() => {
       setIsLoading(false);
-    }, 2000);
+    }, 1500);
   };
   const handleBookingCancellation = async (bookingId) => {
     try {
@@ -86,7 +102,6 @@ const FindMyBooking = () => {
   };
   return (
     <>
-      {errorMessage && <p className="text-danger">{errorMessage}</p>}
       {isDeleted && (
         <div className="alert alert-success mt-3" role="alert">
           Booking has been cancelled successfully
