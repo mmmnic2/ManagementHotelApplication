@@ -1,4 +1,4 @@
-package com.managementhotel.request;
+package com.managementhotel.dto.request;
 
 import jakarta.validation.constraints.NotBlank;
 import lombok.Data;

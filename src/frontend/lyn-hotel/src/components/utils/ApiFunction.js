@@ -244,3 +244,13 @@ export async function getBookingsByUserId(userId) {
     }
   }
 }
+export async function getPayment(price) {
+  try {
+    const result = await api.get(`/api/payment/create-payment/${price}`, {
+      headers: getHeader(),
+    });
+    return result.data;
+  } catch (error) {
+    throw new Error(error.message);
+  }
+}

@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { booksRoom, getRoomById } from "../utils/ApiFunction";
+import { booksRoom, getPayment, getRoomById } from "../utils/ApiFunction";
 import { useEffect, useContext } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import { Form, FormControl } from "react-bootstrap";
@@ -90,6 +90,10 @@ const BookingForm = () => {
       // update here
       const confirmationCode = await booksRoom(roomId, booking, id);
       setIsSubmitted(true);
+      // demo thanh toán online
+      // const url = await getPayment(calculatePayment());
+      // window.location.href = url.url;
+
       navigate("/booking-success", { state: { message: confirmationCode } });
     } catch (e) {
       navigate("/booking-success", { state: { error: e.message } });

@@ -1,4 +1,4 @@
-package com.managementhotel.response;
+package com.managementhotel.dto.response;
 
 import lombok.Data;
 

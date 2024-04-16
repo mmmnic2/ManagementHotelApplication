@@ -1,8 +1,8 @@
 package com.managementhotel.controller;
 
 import com.managementhotel.entity.User;
-import com.managementhotel.response.RoleResponse;
-import com.managementhotel.response.UserResponse;
+import com.managementhotel.dto.response.RoleResponse;
+import com.managementhotel.dto.response.UserResponse;
 import com.managementhotel.service.impl.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -12,7 +12,6 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
-import java.util.Optional;
 import java.util.stream.Collectors;
 
 @RestController

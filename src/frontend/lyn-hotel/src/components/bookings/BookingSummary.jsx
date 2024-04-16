@@ -10,6 +10,7 @@ const BookingSummary = ({ booking, payment, isFormValid, onConfirm }) => {
   const numOfDays = checkOutDate.diff(checkInDate, "days");
   const [isBookingConfirmed, setIsBookingConfirmed] = useState(false);
   const [isProcessingPayment, setIsProcessingPayment] = useState(false);
+  const [paymentUrl, setPaymentUrl] = useState("");
   //const navigate = useNavigate();
   const handleConfirmBooking = () => {
     setIsProcessingPayment(true);

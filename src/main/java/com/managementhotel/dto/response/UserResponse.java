@@ -1,6 +1,5 @@
-package com.managementhotel.response;
+package com.managementhotel.dto.response;
 
-import lombok.AllArgsConstructor;
 import lombok.Data;
 
 import java.util.ArrayList;

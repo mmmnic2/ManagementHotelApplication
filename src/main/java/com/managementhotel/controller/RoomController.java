@@ -4,8 +4,7 @@ import com.managementhotel.entity.BookedRoom;
 import com.managementhotel.entity.Room;
 import com.managementhotel.exception.PhotoRetrievalException;
 import com.managementhotel.exception.ResourceNotFoundException;
-import com.managementhotel.response.BookingResponse;
-import com.managementhotel.response.RoomResponse;
+import com.managementhotel.dto.response.RoomResponse;
 import com.managementhotel.service.impl.BookingService;
 import com.managementhotel.service.impl.RoomService;
 import org.apache.tomcat.util.codec.binary.Base64;
@@ -25,7 +24,6 @@ import java.sql.SQLException;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Locale;
 import java.util.Optional;
 
 @RestController

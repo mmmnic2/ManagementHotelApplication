@@ -1,9 +1,8 @@
-package com.managementhotel.response;
+package com.managementhotel.dto.response;
 
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.apache.tomcat.util.codec.binary.Base64;
-import org.springframework.web.multipart.MultipartFile;
 
 import java.math.BigDecimal;
 import java.util.List;

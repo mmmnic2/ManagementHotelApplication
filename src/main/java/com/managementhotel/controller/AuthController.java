@@ -1,10 +1,9 @@
 package com.managementhotel.controller;
 
-import com.managementhotel.entity.Role;
 import com.managementhotel.entity.User;
 import com.managementhotel.exception.UserAlreadyExistException;
-import com.managementhotel.request.LoginRequest;
-import com.managementhotel.response.JwtResponse;
+import com.managementhotel.dto.request.LoginRequest;
+import com.managementhotel.dto.response.JwtResponse;
 import com.managementhotel.security.jwt.JwtUtils;
 import com.managementhotel.security.user.HotelUserDetails;
 import com.managementhotel.service.IUserService;

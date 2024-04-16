@@ -2,23 +2,16 @@ package com.managementhotel.controller;
 
 import com.managementhotel.entity.BookedRoom;
 import com.managementhotel.entity.Room;
-import com.managementhotel.entity.User;
 import com.managementhotel.exception.InvalidBookingRequestException;
 import com.managementhotel.exception.ResourceNotFoundException;
-import com.managementhotel.response.BookingResponse;
-import com.managementhotel.response.BookingsResponse;
-import com.managementhotel.response.RoomResponse;
-import com.managementhotel.response.UserResponse;
+import com.managementhotel.dto.response.BookingResponse;
+import com.managementhotel.dto.response.RoomResponse;
 import com.managementhotel.service.impl.BookingService;
 import com.managementhotel.service.impl.RoomService;
-import com.managementhotel.service.impl.UserService;
-import lombok.AllArgsConstructor;
 import lombok.RequiredArgsConstructor;
 import org.apache.tomcat.util.codec.binary.Base64;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.sql.SQLException;
